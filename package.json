@@ -1,0 +1,7 @@
+{
+  "name": "kk-paint",
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  }
+}
