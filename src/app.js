@@ -1,4 +1,4 @@
-/* 梨梨画室 v4.0.2 · 独立画室 · 网页 / Android / Windows */
+/* kk-paint v4.0.2 · 独立画室 · 网页 / Android / Windows */
 (function startAtelier(){'use strict';
 const W=window,D=W.document,OWNER='__pear_atelier_app';W[OWNER]?.dispose?.();
 let appState={};try{appState=JSON.parse(W.localStorage.getItem('pear-atelier-state')||'{}');}catch{}
@@ -39,7 +39,7 @@ function validate(b){
 }
 function parse(raw){if(raw.length>100*1024*1024)throw Error('文件超过 100 MB，请分开迁移素材。');let b;try{b=JSON.parse(raw,(k,v)=>{if(['__proto__','constructor','prototype'].includes(k))fail();return v;});}catch{fail();}return validate(b);}
 function create(settings,profiles,options={}){
- const b={format:'pear-atelier-settings',version:1,appVersion:'3.7.3-script',createdAt:new Date().toISOString(),settings:Object.fromEntries(fields.map(k=>[k,clone(settings[k]??null)])),profiles:clone(profiles)};
+ const b={format:'pear-atelier-settings',version:1,appVersion:'4.0.2',createdAt:new Date().toISOString(),settings:Object.fromEntries(fields.map(k=>[k,clone(settings[k]??null)])),profiles:clone(profiles)};
  for(const p of b.profiles)if(!options.keys)delete p.key;
  if(options.vibes!==undefined)b.vibes=clone(options.vibes);
  if(options.assets!==undefined)b.assets=clone(options.assets);
@@ -63,7 +63,7 @@ const ext=ctx().extensionSettings;ext.pear_nai_studio??={scope:uid(),settings:{}
 if(!state.studio2){const pair={id:uid(),name:'我的提示词',positive:old.fixed||'',negative:old.fixedNegative||''};state.studio2={draw:{...PARAMS,...Object.fromEntries(Object.keys(PARAMS).filter(k=>old[k]!==undefined).map(k=>[k,old[k]])),prompt:old.prompt||'',negative:old.negative||'',characters:old.characters||[],coords:!!old.coords,pair:pair.id},inline:{...PARAMS,pair:pair.id,useVibe:true},pairs:[{id:'none',name:'不添加',positive:'',negative:''},{id:'quality',name:'通用质量',positive:'best quality, amazing quality, very aesthetic',negative:'lowres, bad anatomy, bad hands, text, error, jpeg artifacts, low quality'},pair],ui:{top:true,float:true,magic:true,topImage:TOP,floatImage:FLOAT,topSize:32,floatSize:60,previewSize:480,x:null,y:null,css:null},activeApi:null};}
 const s=state.studio2,cfg=s.draw;s.ui={top:true,float:true,magic:true,topImage:TOP,floatImage:FLOAT,topSize:32,floatSize:60,previewSize:480,x:null,y:null,css:null,...s.ui};
 let dead=false,busy=false,controller=null,db=null,selected=null,profiles=[],vibes=[],generationActive=false,scanTimer,entryTimer;
-s.albums??=[];s.deletedVibeGroups??=[];s.paramSets??=[];s.skins??=[];s.deletedImages??=[];s.ui.paintLabel??='♪ 𝓅𝒶𝒾𝓃𝓉𝒾𝓃𝑔';s.ui.imageLayout??='single';s.ui.loopSpeed??=28;s.ui.vibeLayout??='horizontal';s.ui.gallerySize??=185;s.ui.inlineSize??=40;s.ui.inlineRatio??='original';for(const obj of [cfg,s.inline]){obj.count??=1;obj.strength??=.7;obj.noise??=0;obj.transparent??=false;}if(!s.inlineV5){const base=copy(s.inline),wasV5=String(base.customModel||base.model).includes('diffusion-5');s.inlineV5=wasV5?{...base,useVibe:false}:{...base,model:'nai-diffusion-5-full',customModel:'',sm:false,dyn:false,decrisper:false,variety:false,schedule:'karras',sampler:base.sampler==='ddim'?'k_euler_ancestral':base.sampler,useVibe:false};if(wasV5)Object.assign(s.inline,{model:'nai-diffusion-4-5-full',customModel:'',transparent:false});s.ui.inlineModel??=wasV5?'v5':'v45';}s.ui.inlineModel??='v45';s.ui.metaChoices??={};if(!s.ui.autoPairsCleaned){const used=new Set([cfg.pair,s.inline?.pair,s.inlineV5?.pair]);s.pairs=s.pairs.filter(p=>!(['原图提示词','原图内置提示词'].includes(p.name)&&!used.has(p.id)));s.ui.autoPairsCleaned=true;}for(const obj of [s.inlineV5]){obj.count??=1;obj.strength??=.7;obj.noise??=0;obj.transparent??=false;}
+s.albums??=[];s.deletedVibeGroups??=[];s.paramSets??=[];s.skins??=[];s.deletedImages??=[];s.ui.paintLabel??='✵ 𝓀𝓀-𝓅𝒶𝒾𝓃𝓉';s.ui.imageLayout??='single';s.ui.loopSpeed??=28;s.ui.vibeLayout??='horizontal';s.ui.gallerySize??=185;s.ui.inlineSize??=40;s.ui.inlineRatio??='original';for(const obj of [cfg,s.inline]){obj.count??=1;obj.strength??=.7;obj.noise??=0;obj.transparent??=false;}if(!s.inlineV5){const base=copy(s.inline),wasV5=String(base.customModel||base.model).includes('diffusion-5');s.inlineV5=wasV5?{...base,useVibe:false}:{...base,model:'nai-diffusion-5-full',customModel:'',sm:false,dyn:false,decrisper:false,variety:false,schedule:'karras',sampler:base.sampler==='ddim'?'k_euler_ancestral':base.sampler,useVibe:false};if(wasV5)Object.assign(s.inline,{model:'nai-diffusion-4-5-full',customModel:'',transparent:false});s.ui.inlineModel??=wasV5?'v5':'v45';}s.ui.inlineModel??='v45';s.ui.metaChoices??={};if(!s.ui.autoPairsCleaned){const used=new Set([cfg.pair,s.inline?.pair,s.inlineV5?.pair]);s.pairs=s.pairs.filter(p=>!(['原图提示词','原图内置提示词'].includes(p.name)&&!used.has(p.id)));s.ui.autoPairsCleaned=true;}for(const obj of [s.inlineV5]){obj.count??=1;obj.strength??=.7;obj.noise??=0;obj.transparent??=false;}
 let assets={base:null,mask:null,precise:[]},waitCount=0,balanceInfo=null;const paramSelectors=[];
 const galleryDates={from:"",to:""};let metadataPreview,albumMenu,galleryAlbum="all";
 const cleanup=[],bindings=[],pairSelects=[],inlineRecords=new Map(),gallerySelection=new Set();
@@ -80,7 +80,33 @@ function save(){W.localStorage.setItem('pear-atelier-state',JSON.stringify(appSt
 function bind(parent,obj,key,label,input){const update=()=>{if(input.type==='checkbox')input.checked=!!obj[key];else input.value=obj[key]??'';};update();input.addEventListener('change',()=>{obj[key]=input.type==='checkbox'?input.checked:input.type==='number'?Number(input.value):input.value;save();});update.node=input;bindings.push(update);const labelNode=field(label,input);if(input.type==='checkbox')labelNode.className='field check-field';parent.append(labelNode);return input;}
 function check(parent,obj,key,label){const n=e('input');n.type='checkbox';return bind(parent,obj,key,label,n);}
 function section(parent,title,open=false){const n=e('details',undefined,'box');n.open=open;n.append(e('summary',title));const body=e('div',undefined,'boxbody');n.append(body);parent.append(n);return body;}
+                         
 
+const uid=()=>{if(W.crypto.randomUUID)return W.crypto.randomUUID();const a=W.crypto.getRandomValues(new Uint8Array(16));a[6]=(a[6]&15)|64;a[8]=(a[8]&63)|128;const h=Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);},copy=x=>structuredClone(x);
+const PARAMS={model:'nai-diffusion-4-5-full',customModel:'',width:832,height:1216,steps:28,scale:5,rescale:0,seed:-1,sampler:'k_euler_ancestral',schedule:'karras',sm:false,dyn:false,decrisper:false,variety:false,count:1,strength:.7,noise:0,transparent:false,inpaintStrength:1,inpaintOverlay:true};
+const TOP='https://s1.oururl.cn/autoupload/cgoqf/20260920/rJFn/388X432/%E6%B2%90%E6%9E%9C%E7%B4%A0%E6%9D%90_%2814%29.png';
+const FLOAT='https://s1.oururl.cn/autoupload/cgoqf/20260923/ogkh/369X285/%E6%B2%90%E6%9E%9C%E7%B4%A0%E6%9D%90_%2833%29.png';
+const ext=ctx().extensionSettings;ext.kk_paint_studio??={scope:uid(),settings:{}};const state=ext.kk_paint_studio,old=state.settings||{};
+if(!state.studio2){const pair={id:uid(),name:'我的提示词',positive:old.fixed||'',negative:old.fixedNegative||''};state.studio2={draw:{...PARAMS,...Object.fromEntries(Object.keys(PARAMS).filter(k=>old[k]!==undefined).map(k=>[k,old[k]])),prompt:old.prompt||'',negative:old.negative||'',characters:old.characters||[],coords:!!old.coords,pair:pair.id},inline:{...PARAMS,pair:pair.id,useVibe:true},pairs:[{id:'none',name:'不添加',positive:'',negative:''},{id:'quality',name:'通用质量',positive:'best quality, amazing quality, very aesthetic',negative:'lowres, bad anatomy, bad hands, text, error, jpeg artifacts, low quality'},pair],ui:{top:true,float:true,magic:true,topImage:TOP,floatImage:FLOAT,topSize:32,floatSize:60,previewSize:480,x:null,y:null,css:null},activeApi:null};}
+const s=state.studio2,cfg=s.draw;s.ui={top:true,float:true,magic:true,topImage:TOP,floatImage:FLOAT,topSize:32,floatSize:60,previewSize:480,x:null,y:null,css:null,...s.ui};
+let dead=false,busy=false,controller=null,db=null,selected=null,profiles=[],vibes=[],generationActive=false,scanTimer,entryTimer;
+s.albums??=[];s.deletedVibeGroups??=[];s.paramSets??=[];s.skins??=[];s.deletedImages??=[];s.ui.paintLabel??='✵ 𝓀𝓀-𝓅𝒶𝒾𝓃𝓉';s.ui.imageLayout??='single';s.ui.loopSpeed??=28;s.ui.vibeLayout??='horizontal';s.ui.gallerySize??=185;s.ui.inlineSize??=40;s.ui.inlineRatio??='original';for(const obj of [cfg,s.inline]){obj.count??=1;obj.strength??=.7;obj.noise??=0;obj.transparent??=false;}if(!s.inlineV5){const base=copy(s.inline),wasV5=String(base.customModel||base.model).includes('diffusion-5');s.inlineV5=wasV5?{...base,useVibe:false}:{...base,model:'nai-diffusion-5-full',customModel:'',sm:false,dyn:false,decrisper:false,variety:false,schedule:'karras',sampler:base.sampler==='ddim'?'k_euler_ancestral':base.sampler,useVibe:false};if(wasV5)Object.assign(s.inline,{model:'nai-diffusion-4-5-full',customModel:'',transparent:false});s.ui.inlineModel??=wasV5?'v5':'v45';}s.ui.inlineModel??='v45';s.ui.metaChoices??={};if(!s.ui.autoPairsCleaned){const used=new Set([cfg.pair,s.inline?.pair,s.inlineV5?.pair]);s.pairs=s.pairs.filter(p=>!(['原图提示词','原图内置提示词'].includes(p.name)&&!used.has(p.id)));s.ui.autoPairsCleaned=true;}for(const obj of [s.inlineV5]){obj.count??=1;obj.strength??=.7;obj.noise??=0;obj.transparent??=false;}
+let assets={base:null,mask:null,precise:[]},waitCount=0,balanceInfo=null;const paramSelectors=[];
+const galleryDates={from:"",to:""};let metadataPreview,albumMenu,galleryAlbum="all";
+const cleanup=[],bindings=[],pairSelects=[],inlineRecords=new Map(),gallerySelection=new Set();
+const e=(tag,text,cls)=>{const n=D.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
+const guard=fn=>async(...args)=>{try{return await fn(...args);}catch(err){notify(err.name==='AbortError'?'已停止等待，已提交的请求仍可能计费。':err.message||String(err),true);}};
+const b=(label,fn)=>{const n=e('button',label);n.type='button';n.onclick=guard(async(...args)=>{const result=fn(...args);if(result&&typeof result.then==='function'){n.disabled=true;const dots=waveDots();n.append(dots);n.classList.add('waiting');try{return await result;}finally{dots.remove();n.disabled=false;n.classList.remove('waiting');}}return result;});return n;};
+const row=(...nodes)=>{const n=e('div',undefined,'row');n.append(...nodes);return n;};
+const text=(value='',multi=false)=>{const n=e(multi?'textarea':'input');if(!multi)n.type='text';n.value=value;return n;};
+const numberInput=(value,min,max,step=1)=>{const n=text(value);n.type='number';Object.assign(n,{min,max,step});return n;};
+const field=(label,node)=>{const n=e('label',undefined,'field');n.append(e('span',label),node);return n;};
+const select=(items,value)=>{const n=e('select');for(const item of items){const [v,label]=Array.isArray(item)?item:[item,item];const o=e('option',label);o.value=v;n.append(o);}n.value=value??'';return n;};
+const note=(parent,value)=>parent.append(e('p',value,'muted'));
+function save(){W.localStorage.setItem('kk-paint-state',JSON.stringify(appState));scheduleTokens();}
+function bind(parent,obj,key,label,input){const update=()=>{if(input.type==='checkbox')input.checked=!!obj[key];else input.value=obj[key]??'';};update();input.addEventListener('change',()=>{obj[key]=input.type==='checkbox'?input.checked:input.type==='number'?Number(input.value):input.value;save();});update.node=input;bindings.push(update);const labelNode=field(label,input);if(input.type==='checkbox')labelNode.className='field check-field';parent.append(labelNode);return input;}
+function check(parent,obj,key,label){const n=e('input');n.type='checkbox';return bind(parent,obj,key,label,n);}
+function section(parent,title,open=false){const n=e('details',undefined,'box');n.open=open;n.append(e('summary',title));const body=e('div',undefined,'boxbody');n.append(body);parent.append(n);return body;}
 /* Local T5 reference tokenizer (google-t5/t5-base, Apache-2.0).
    Counts text pieces without EOS. Weight markup is stripped before counting.
    NovelAI-specific normalization/V5/V3 tokenizers may differ; UI states this explicitly. */
@@ -521,7 +547,7 @@ async function sendGeneration(req,profile){const payload=copy(req);delete payloa
 async function upscaleItem(item){const original=copy(item),profile=activeProfile();return run(async()=>{
  const base=await imageData(original.image),payload={image:base.url.split(',')[1],width:base.width,height:base.height,scale:2};
  if(!payload.image||!base.width||!base.height)throw Error('无法读取原图。');
- notify('正在提高清晰度…');const images=await decodeImages(await api('/ai/upscale',payload,profile));
+ notify('正在提高清晰度…');const images=await decodeImages(await api('/ai/augment-image',payload,profile));
  const request=copy(original.request||{parameters:{}});request.parameters??={};
  request._pear={...copy(original.meta||{}),upscale:{sourceId:original.id,scale:2,width:base.width,height:base.height}};
  const items=[];for(const image of images){const result=await imageData(image);request.parameters.width=result.width;request.parameters.height=result.height;items.push(...await acceptImages([image],request,null));}
