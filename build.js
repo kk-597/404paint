@@ -101,23 +101,33 @@ export default {
         '/ai/augment-image': 'POST',
         '/user/subscription': 'GET'
       }[route];
-      if (!expected || request.method !== expected) return new Response('Not found', { status: 404 });
+      
+      if (!expected || request.method !== expected) {
+        return new Response('Not found', { status: 404 });
+      }
 
       const origin = request.headers.get('Origin');
-      if (origin && origin !== u.origin) return new Response('Origin rejected', { status: 403 });
+      if (origin && origin !== u.origin) {
+        return new Response('Origin rejected', { status: 403 });
+      }
 
       const auth = request.headers.get('Authorization') || '';
-      if (!auth.startsWith('Bearer ') || auth.length > 8192) return new Response('Key required', { status: 401 });
-      if (Number(request.headers.get('Content-Length') || 0) > 41943040) return new Response('Request too large', { status: 413 });
+      if (!auth.startsWith('Bearer ') || auth.length > 8192) {
+        return new Response('Key required', { status: 401 });
+      }
+      if (Number(request.headers.get('Content-Length') || 0) > 41943040) {
+        return new Response('Request too large', { status: 413 });
+      }
 
       let body;
       if (expected === 'POST') {
         body = await request.arrayBuffer();
-        if (body.byteLength > 41943040) return new Response('Request too large', { status: 413 });
+        if (body.byteLength > 41943040) {
+          return new Response('Request too large', { status: 413 });
+        }
       }
 
       try {
-        // 【核心修复】查点数和查订阅走 api.novelai.net，生图和放大走 image.novelai.net
         const baseUrl = route === '/user/subscription' ? 'https://api.novelai.net' : 'https://image.novelai.net';
         const targetRoute = route === '/ai/upscale' ? '/ai/augment-image' : route;
         
@@ -135,7 +145,11 @@ export default {
             redirect: 'manual'
           }
         );
-        if (response.status >= 300 && response.status < 400) return new Response('Upstream redirect rejected', { status: 502 });
+        
+        if (response.status >= 300 && response.status < 400) {
+          return new Response('Upstream redirect rejected', { status: 502 });
+        }
+        
         return new Response(response.body, {
           status: response.status,
           headers: {
@@ -144,16 +158,20 @@ export default {
             'X-Content-Type-Options': 'nosniff'
           }
         });
-      } catch {
+      } catch (e) {
         return new Response('NovelAI connection failed', { status: 502 });
       }
     }
 
-    if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', { status: 405 });
+    if (!['GET', 'HEAD'].includes(request.method)) {
+      return new Response('Method not allowed', { status: 405 });
+    }
 
     const path = u.pathname === '/' ? '/index.html' : u.pathname;
     const item = ASSETS[path];
-    if (!item) return new Response('Not found', { status: 404 });
+    if (!item) {
+      return new Response('Not found', { status: 404 });
+    }
 
     return new Response(request.method === 'HEAD' ? null : item.body, {
       headers: {
