@@ -95,10 +95,11 @@ export default {
 
     if (u.pathname.startsWith('/nai/')) {
       const route = u.pathname.slice(4);
-      const expected = {
+           const expected = {
         '/ai/generate-image': 'POST',
         '/ai/encode-vibe': 'POST',
         '/ai/augment-image': 'POST',
+        '/ai/upscale': 'POST',
         '/user/subscription': 'GET'
       }[route];
       
@@ -129,7 +130,7 @@ export default {
 
       try {
         const baseUrl = route === '/user/subscription' ? 'https://api.novelai.net' : 'https://image.novelai.net';
-        const targetRoute = route === '/ai/upscale' ? '/ai/augment-image' : route;
+        const targetRoute = route === '/ai/upscale' ? '/ai/upscale' : route;
         
         const response = await fetch(
           baseUrl + targetRoute,
