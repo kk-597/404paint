@@ -93,12 +93,10 @@ export default {
       });
     }
 
-    if (u.pathname.startsWith('/nai/')) {
-      const route = u.pathname.slice(4);
       const expected = {
         '/ai/generate-image': 'POST',
         '/ai/encode-vibe': 'POST',
-        '/ai/upscale': 'POST',
+        '/ai/augment-image': 'POST',
         '/user/subscription': 'GET'
       }[route];
       if (!expected || request.method !== expected) return new Response('Not found', { status: 404 });
