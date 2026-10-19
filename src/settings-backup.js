@@ -7,7 +7,7 @@ const clone=x=>JSON.parse(JSON.stringify(x));
 function fail(){throw Error('设置文件格式不正确，未修改现有数据。');}
 function list(a){if(!Array.isArray(a)||a.length>10000)fail();const ids=new Set();for(const x of a){if(!record(x)||typeof x.id!=='string'||!x.id||ids.has(x.id))fail();ids.add(x.id);}return a;}
 function validate(b){
- if(!record(b)||b.format!=='pear-atelier-settings'||b.version!==1)throw Error('请选择梨梨画室导出的设置文件（版本 1）。');
+ if(!record(b)||b.format!=='pear-atelier-settings'||b.version!==1)throw Error('请选择kk画室导出的设置文件（版本 1）。');
  const p=b.settings;if(!record(p)||!record(p.draw)||!record(p.inline)||!record(p.ui))fail();
  for(const k of ['pairs','paramSets','skins'])list(p[k]);
  for(const x of p.pairs)if(typeof x.name!=='string'||typeof x.positive!=='string'||typeof x.negative!=='string')fail();
