@@ -93,6 +93,8 @@ export default {
       });
     }
 
+    if (u.pathname.startsWith('/nai/')) {
+      const route = u.pathname.slice(4);
       const expected = {
         '/ai/generate-image': 'POST',
         '/ai/encode-vibe': 'POST',
@@ -114,7 +116,7 @@ export default {
         if (body.byteLength > 41943040) return new Response('Request too large', { status: 413 });
       }
 
-try {
+      try {
         // 兼容旧的 upscale 路径和新的 augment-image 路径，并统一转发到正确的图片服务器
         const isImageApi = route === '/ai/upscale' || route === '/ai/augment-image';
         const targetRoute = route === '/ai/upscale' ? '/ai/augment-image' : route;
