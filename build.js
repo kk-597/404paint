@@ -117,10 +117,9 @@ export default {
       }
 
       try {
-        // 兼容旧的 upscale 路径和新的 augment-image 路径，并统一转发到正确的图片服务器
-        const isImageApi = route === '/ai/upscale' || route === '/ai/augment-image';
+        // 【核心修复】查点数和查订阅走 api.novelai.net，生图和放大走 image.novelai.net
+        const baseUrl = route === '/user/subscription' ? 'https://api.novelai.net' : 'https://image.novelai.net';
         const targetRoute = route === '/ai/upscale' ? '/ai/augment-image' : route;
-        const baseUrl = isImageApi ? 'https://image.novelai.net' : 'https://api.novelai.net';
         
         const response = await fetch(
           baseUrl + targetRoute,
@@ -129,7 +128,8 @@ export default {
             headers: {
               Authorization: auth,
               'Content-Type': 'application/json',
-              'Accept': 'application/json'
+              'Accept': 'application/json',
+              'User-Agent': 'Mozilla/5.0'
             },
             body,
             redirect: 'manual'
