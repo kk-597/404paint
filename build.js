@@ -129,8 +129,9 @@ export default {
       }
 
       try {
-        const baseUrl = route === '/user/subscription' ? 'https://api.novelai.net' : 'https://image.novelai.net';
-        const targetRoute = route === '/ai/upscale' ? '/ai/upscale' : route;
+               // 全部统一走 image 服务器，保证查点数、生图、放大都能通
+        const baseUrl = 'https://image.novelai.net';
+        const targetRoute = route === '/ai/augment-image' ? '/ai/upscale' : route;
         
         const response = await fetch(
           baseUrl + targetRoute,
