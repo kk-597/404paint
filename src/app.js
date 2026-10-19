@@ -518,7 +518,8 @@ function endProgress(ok){const g=genProgress();if(!g.active)return;g.active=fals
 async function sendGeneration(req,profile){const payload=copy(req);delete payload._pear;let images;startProgress(req);try{images=await decodeImages(await api('/ai/generate-image',payload,profile));}catch(err){endProgress(false);throw err;}endProgress(true);if(req.action==='infill'&&req._pear?.settings?.inpaintOverlay!==false)images=await Promise.all(images.map(x=>compositeInpaint(x,req.parameters.image,req.parameters.mask,req.parameters.width,req.parameters.height).catch(err=>{notify('合成回原图失败，已保留官网原始结果：'+err.message,true);return x;})));await accountGeneration(profile,images.length);return images;}
 // Upscale is a separate paid operation on an existing image; never retry it automatically.
 async function upscaleItem(item){const original=copy(item),profile=activeProfile();return run(async()=>{
- const base=await imageData(original.image),payload={image:base.url.split(',')[1],width:base.width,height:base.height,scale:2};
+ const base=await imageData(original.image);
+ const payload={image:base.url.split(',')[1],width:base.width,height:base.height,scale:2, model:'nai-diffusion-3-inpainting'};
  if(!payload.image||!base.width||!base.height)throw Error('无法读取原图。');
  notify('正在提高清晰度…');const images=await decodeImages(await api('/ai/augment-image',payload,profile));
  const request=copy(original.request||{parameters:{}});request.parameters??={};
